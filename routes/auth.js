@@ -3,13 +3,15 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User')
 var bcrypt = require('bcryptjs');
+var fetchuser = require('../middleware/fetchuser');
 
-// JWT Tokenizere
+
+// JWT Tokenizer
 var jwt = require('jsonwebtoken');
 const JWT_TKN = 'HashOPBolte';
 
 
-// Signup for the new user ENDPOINT
+//ROUTE 1 -> Signup for the new user ENDPOINT
 router.post('/', [
     body('name').isLength({min:3}),
     body('email').isEmail(),
@@ -25,7 +27,7 @@ try {
     // Adding Salt & Hash function to password and Createing entry in DB
     const salt = await bcrypt.genSalt(10);
     const secpass = await bcrypt.hash(req.body.password, salt);
-    user = await  User.create({
+    const user = await  User.create({
         username: req.body.name,
         password: secpass,
         email: req.body.email
@@ -38,20 +40,19 @@ try {
     }
 
     // Creating Token for authentication of the user
-    var jwtData = jwt.sign(data, JWT_TKN);
-    console.log(jwtData);
-    res.json(user);
+    const authtoken = jwt.sign(data, JWT_TKN);
+    console.log(authtoken);
+    res.json({authtoken});
 
 }catch (e) {
     //Typererror
     res.status(500).send('SOme error Occured');
 }
 
-    // res.send(req.body);
-  });
+  })
 
 
-  // Authenticating the user ENDPOINT
+  //Route 2 -> Authenticating the user LOGIN ENDPOINT
   router.post('/auth', [
     body('email').isEmail(),
     body('password').exists()
@@ -77,7 +78,9 @@ try {
         }
 
         const data ={
-            id: user.id
+            user: {
+                id: user.id
+            }
         }
         const authtoken= jwt.sign(data, JWT_TKN);
         res.json(authtoken);
@@ -87,6 +90,25 @@ try {
         res.status(500).send('SOme error Occured');
     }
 
+    //Fetch USer Details 
+
+
+  })
+
+
+  // Route 3 -> Fetch User Details
+  router.post('/getuser', fetchuser, async (req,res) => {
+
+    
+    try{
+        const userid= req.user.id;
+        const user = await User.findById(userid).select('-password');
+        res.send(user);
+
+    } catch (e) {
+        //Typererror
+        res.status(500).send('SOme error Occured');
+    }
   })
 
 

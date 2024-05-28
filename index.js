@@ -12,7 +12,8 @@ const port = 3000
 
 app.use(express.json());
 // Available routes
-app.use('/', require('./routes/auth'))
+app.use('/', require('./routes/auth'));
+app.use('/', require('./routes/notes'));
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
