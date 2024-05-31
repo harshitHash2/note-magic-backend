@@ -28,7 +28,7 @@ router.get('/fetchallnotes', fetchuser, async (req,res) => {
     // Validating the user input 
     const result = validationResult(req);
     if (!result.isEmpty()) {
-      return res.status(400).json({errors: errors.array()});
+      return res.status(400).json({errors: 'Validation Failed'});
     }
     const {title, description, tag} = req.body;
     try{
@@ -51,7 +51,8 @@ router.get('/fetchallnotes', fetchuser, async (req,res) => {
     if(description) {newNote.description= description};
     if(tag) {newNote.tag= tag};
 
-    const note = Notes.findById(re.param.id);
+    const note = await Notes.findById(req.params.id);
+    // console.log(note._id.toString());
     if(!note) {
         return res.status(404).send('Not found');
     }
@@ -59,24 +60,25 @@ router.get('/fetchallnotes', fetchuser, async (req,res) => {
         return res.status(404).send('Not Allowed');
     }
 
-    note= await Notes.findByIdAndUpdate(req.params.id, {$set: newNote}, {new:true});
-    res.json({note});
+    const note1= await Notes.findByIdAndUpdate(req.params.id, {$set: newNote}, {new:true});
+    res.json({note1});
   })
 
   // Route 4 -> Deleteing a note
   router.delete('/deletenote/:id', fetchuser, async (req,res) => {
 
     const {title, description, tag} = req.body;
-
-    const note = Notes.findById(re.param.id);
+    
+    const note = await Notes.findById(req.params.id);
     if(!note) {
         return res.status(404).send('Not found');
+    
     }
     if(note.user.toString() !== req.user.id){
         return res.status(404).send('Not Allowed');
     }
 
-    note= await Notes.findByIdAndDelete(req.params.id);
+    const note1= await Notes.findByIdAndDelete(req.params.id);
     res.json({'success': 'Note has been deleted'});
   })
 module.exports= router;

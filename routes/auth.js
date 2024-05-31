@@ -12,7 +12,7 @@ const JWT_TKN = 'HashOPBolte';
 
 
 //ROUTE 1 -> Signup for the new user ENDPOINT
-router.post('/', [
+router.post('/signup', [
     body('name').isLength({min:3}),
     body('email').isEmail(),
     body('password').isLength({min:5})
@@ -53,10 +53,11 @@ try {
 
 
   //Route 2 -> Authenticating the user LOGIN ENDPOINT
-  router.post('/auth', [
+  router.post('/login', [
     body('email').isEmail(),
     body('password').exists()
   ], async (req,res) => {
+    let success =false;
 
     // Validating the user input 
     const result = validationResult(req);
@@ -74,7 +75,7 @@ try {
         // If exists comparing with the hash of the by decrypting the existed hash function conversion
         const passwordComp= bcrypt.compare(password, user.password);
         if(!passwordComp){
-            return res.status(400).json({errors: 'Enter correct Credentials'});
+            return res.status(400).json({success, errors: 'Enter correct Credentials'});
         }
 
         const data ={
@@ -83,21 +84,20 @@ try {
             }
         }
         const authtoken= jwt.sign(data, JWT_TKN);
-        res.json(authtoken);
+        success= true;
+        res.json({success, authtoken});
 
     } catch (e) {
         //Typererror
         res.status(500).send('SOme error Occured');
     }
 
-    //Fetch USer Details 
-
 
   })
 
 
   // Route 3 -> Fetch User Details
-  router.post('/getuser', fetchuser, async (req,res) => {
+  router.post('/', fetchuser, async (req,res) => {
 
     
     try{
