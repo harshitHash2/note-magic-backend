@@ -9,6 +9,8 @@ const fetchuser = (req, res, next)=> {
     try {
         const data = jwt.verify(token, JWT_TKN);
         req.user = data.user;
+        console.log("***********************************************************");
+        console.log(req.user.id);
         next();
     } catch (e) {
         res.status(401).send({error: 'Something Wrong went'});
