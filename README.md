@@ -30,7 +30,7 @@ This is the backend of Note Magic, a web application that allows users to create
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/inotebook-backend.git
+   git clone https://github.com/harshitHash2/note-magic-backend.git
    cd inotebook-backend
 
 ## Running the Application
