@@ -31,7 +31,7 @@ This is the backend of Note Magic, a web application that allows users to create
 
    ```bash
    git clone https://github.com/harshitHash2/note-magic-backend.git
-   cd inotebook-backend
+   cd note-magic-backend
 
 ## Running the Application
 
