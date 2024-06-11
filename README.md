@@ -1,6 +1,6 @@
-# iNotebook Backend
+# Note-Magic-Backend
 
-This is the backend of iNotebook, a web application that allows users to create, manage, and store notes on the cloud. It is built with Node.js, Express.js, and MongoDB, providing robust and secure backend services, including user authentication and CRUD operations for notes.
+This is the backend of Note Magic, a web application that allows users to create, manage, and store notes on the cloud. It is built with Node.js, Express.js, and MongoDB, providing robust and secure backend services, including user authentication and CRUD operations for notes.
 
 ## Features
 
